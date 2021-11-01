@@ -1,6 +1,8 @@
 const { isEmpty } = require("lodash");
 const db = require("../models");
 const { Movies } = db;
+const { Op } = require("sequelize");
+
 
 // Add New Movie to Database
 const addMovie = async (req, res) => {
@@ -165,10 +167,39 @@ const deleteMovie = async (req, res) => {
   }
 };
 
+// Search Movie
+const searchMovie =async (req,res) => {
+  try {
+    const { key } = req.params;
+    if (!isEmpty(key)) {
+      const searchData = await Movies.findAll({
+        where: { title: { [Op.iLike]: `${key}` } },
+      });
+      console.log(searchData)
+      if(!isEmpty(searchData)){
+        return res
+        .status(200)
+        .json(searchData);
+      }
+    } else {
+      return res.status(404).json({
+        status: false,
+        message: "Search Key is Not Found",
+      });
+    }
+  } catch (err) {
+    console.log(err);
+    res
+      .status(400)
+      .json({ status: false, message: "Something went wrong.. Contact Admin" });
+  }
+};
+
 module.exports = {
   addMovie,
   getMovies,
   getSingleMovie,
   updateMovie,
   deleteMovie,
+  searchMovie
 };

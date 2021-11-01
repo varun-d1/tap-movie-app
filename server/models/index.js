@@ -12,5 +12,5 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.Movies = require("./Movies.js")(sequelize, Sequelize);
-
+// db.Movies.sync({alter:true})
 module.exports = db;

@@ -1,4 +1,5 @@
 import { Card, Button } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 function MovieCard(props) {
   return (
@@ -6,9 +7,11 @@ function MovieCard(props) {
       <Card.Body>
         <Card.Title>{props.data.title}</Card.Title>
         <Card.Text>
-          Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+          {props.data.desc ? `${props.data.desc.substring(0, 150)}...` : ''}
         </Card.Text>
-        <Button variant="success">View Movie</Button>
+        <Link to={`/detail/${props.data.imdbId}`}>
+        <Button variant="success">View Details</Button>
+        </Link>
       </Card.Body>
     </Card>
   );

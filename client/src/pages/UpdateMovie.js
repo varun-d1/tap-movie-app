@@ -1,17 +1,41 @@
 import { Card, Form, Button, Container } from "react-bootstrap";
-import { useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useHistory, useParams } from "react-router-dom";
 import axios from "axios";
 
 import Error from "../components/Error";
 import Loader from "../components/Loader";
 import { isEmpty } from "lodash";
 
-function AddMovie() {
+function UpdateMovie() {
+  const { imdbId } = useParams();
+
   const [formValues, setFormValues] = useState({});
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [movieData, setMovieData] = useState({});
+
   const history = useHistory();
+
+  useEffect(() => {
+    getMovieDetails();
+  }, []);
+
+  const getMovieDetails = async () => {
+    setLoading(true);
+    try {
+      const url = `http://localhost:4000/api/movies/details/${imdbId}`;
+      const response = await axios.get(url);
+      if (response.status === 201) {
+        setMovieData(response.data);
+      } else {
+        setErrorMessage("Something Went Wrong");
+      }
+    } catch (error) {
+      setErrorMessage(error.message);
+    }
+    setLoading(false);
+  };
 
   const onChangeFormField = async (event) => {
     const { value, name, type } = event.target;
@@ -27,17 +51,19 @@ function AddMovie() {
       try {
         setLoading(true);
         await axios({
-          url: "http://localhost:4000/api/movies/add",
-          method: "POST",
+          url: `http://localhost:4000/api/movies/update/${imdbId}`,
+          method: "PATCH",
           data: formValues,
         });
         setLoading(false);
-        history.push("/");
+        const url = `/details/${imdbId}`
+        history.push(url);
+    
       } catch (e) {
         setErrorMessage(`Error : ${e.message}`);
         setLoading(false);
       }
-    }else{
+    } else {
       setErrorMessage("All Fields are Mandatory");
     }
   };
@@ -47,7 +73,7 @@ function AddMovie() {
       <Card>
         {errorMessage ? <Error message={errorMessage} /> : ""}
         <Card.Header>
-          <h4 className="text-center">Add New Movie</h4>
+          <h4 className="text-center">Update Movie - {movieData.title}</h4>
         </Card.Header>
         <Card.Body>
           <Form.Group className="mb-3" controlId="title">
@@ -56,12 +82,14 @@ function AddMovie() {
               type="text"
               name="imdbId"
               onBlur={onChangeFormField}
+              value={movieData.imdbId}
+              disabled
             />
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="rating">
             <Form.Label>Movie Title</Form.Label>
-            <Form.Control type="text" name="title" onBlur={onChangeFormField} />
+            <Form.Control type="text" name="title" onBlur={onChangeFormField}/>
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="poster">
@@ -130,4 +158,4 @@ function AddMovie() {
   );
 }
 
-export default AddMovie;
+export default UpdateMovie;
