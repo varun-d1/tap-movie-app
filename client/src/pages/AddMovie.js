@@ -63,7 +63,10 @@ function AddMovie() {
             <Form.Label>Movie Title</Form.Label>
             <Form.Control type="text" name="title" onBlur={onChangeFormField} />
           </Form.Group>
-
+          <Form.Group className="mb-3" controlId="rating">
+            <Form.Label>Movie Description</Form.Label>
+            <Form.Control type="text" name="desc" onBlur={onChangeFormField} />
+          </Form.Group>
           <Form.Group className="mb-3" controlId="poster">
             <Form.Label>Movie Release Year</Form.Label>
             <Form.Control

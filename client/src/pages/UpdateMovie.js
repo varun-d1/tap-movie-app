@@ -1,6 +1,6 @@
 import { Card, Form, Button, Container } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams,Redirect } from "react-router-dom";
 import axios from "axios";
 
 import Error from "../components/Error";
@@ -56,9 +56,8 @@ function UpdateMovie() {
           data: formValues,
         });
         setLoading(false);
-        const url = `/details/${imdbId}`
-        history.push(url);
-    
+        const urlRedirect = `/detail/${imdbId}`
+        history.push(urlRedirect)
       } catch (e) {
         setErrorMessage(`Error : ${e.message}`);
         setLoading(false);
@@ -91,7 +90,10 @@ function UpdateMovie() {
             <Form.Label>Movie Title</Form.Label>
             <Form.Control type="text" name="title" onBlur={onChangeFormField}/>
           </Form.Group>
-
+          <Form.Group className="mb-3" controlId="rating">
+            <Form.Label>Movie Description</Form.Label>
+            <Form.Control type="text" name="desc" onBlur={onChangeFormField} />
+          </Form.Group>
           <Form.Group className="mb-3" controlId="poster">
             <Form.Label>Movie Release Year</Form.Label>
             <Form.Control

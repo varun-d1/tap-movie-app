@@ -90,8 +90,8 @@ const getSingleMovie = async (req, res) => {
         message: "imdbId is Mandatory field, Please enter imdbId",
       });
     }
-  } catch {
-    console.log(err);
+  } catch(err) {
+    console.log(err.message)
     res
       .status(400)
       .json({ status: false, message: "Something went wrong.. Contact Admin" });
@@ -173,7 +173,7 @@ const searchMovie =async (req,res) => {
     const { key } = req.params;
     if (!isEmpty(key)) {
       const searchData = await Movies.findAll({
-        where: { title: { [Op.iLike]: `${key}` } },
+        where: { title: { [Op.iRegexp]: `${key}` } },
       });
       console.log(searchData)
       if(!isEmpty(searchData)){

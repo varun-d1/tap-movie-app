@@ -20,9 +20,12 @@ export default function Home() {
     getAllMovies();
   }, []);
 
-  const getMovies = () => {
+  const getSearchResults =async () => {
     if (!isEmpty(searchKey)) {
       setLoading(true);
+      const result = await axios.get(BASE_URL + `/search/${searchKey}`);
+      setData(result.data);
+      setLoading(false)
     } else {
       setErrorMessage("Something Went Wrong.. Please try again later");
     }
@@ -32,7 +35,6 @@ export default function Home() {
     setLoading(true);
     const result = await axios.get(BASE_URL + "/all");
     setData(result.data);
-
     setLoading(false);
   };
   return (
@@ -42,8 +44,9 @@ export default function Home() {
         setSearchKey={setSearchKey}
         errorMessage={errorMessage}
         setErrorMessage={setErrorMessage}
-        getMovies={getMovies}
+        getSearchResults={getSearchResults}
         setLoading={setLoading}
+        getAllMovies={getAllMovies}
       />
       {loading ? <Loader /> : ""}
 

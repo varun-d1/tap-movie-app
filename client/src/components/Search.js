@@ -1,15 +1,16 @@
 import { isEmpty } from "lodash";
 import { FormControl, Button, Stack } from "react-bootstrap";
-
 import Error from "./Error";
 function Search({
   searchKey,
   setSearchKey,
   errorMessage,
   setErrorMessage,
-  getMovies,
+  getSearchResults,
   setLoading,
-}) {
+  getAllMovies
+}) 
+{
   const setChangedText = (text) => {
     setSearchKey(text.target.value);
   };
@@ -19,12 +20,13 @@ function Search({
       setErrorMessage("Search key should not be empty..!!!");
     } else {
       setErrorMessage(null);
-      getMovies();
+      getSearchResults();
     }
   };
 
   const onClickReset = () => {
     setSearchKey("");
+    getAllMovies();
     setErrorMessage(null);
     setLoading(false);
   };
